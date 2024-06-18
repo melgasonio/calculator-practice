@@ -142,19 +142,30 @@ keys.addEventListener('click', e => {
                 display.textContent = curRunningTotal
                 
             } 
+
             runningTotalLog = ['0'];
             keyPressCount = 0;
             keyPressLog = ['0'];
 
             operatorPressCount = 0;
             operatorPressLog = ['+'];
-
         }
 
 
 
 
         // If key is AC
+        if (keyContent === 'AC') {
+
+            display.textContent = '0';
+
+            runningTotalLog = ['0'];
+            keyPressCount = 0;
+            keyPressLog = ['0'];
+
+            operatorPressCount = 0;
+            operatorPressLog = ['+'];
+        }
 
 
 
