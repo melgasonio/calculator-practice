@@ -46,7 +46,7 @@ keys.addEventListener('click', e => {
             }
 
             // If previous key is an operator, replace the display content with keyContent
-            if (operatorKeys.includes(prevKey)) {
+            if (operatorKeys.includes(prevKey) || prevKey === '=') {
                 display.textContent = keyContent;
             }
             
@@ -82,7 +82,6 @@ keys.addEventListener('click', e => {
             operatorPressLog.push(keyContent);
         }
 
-
         // If key is a decimal point
         if (keyContent === '.') {
             // If a decimal point does not follow another decimal point
@@ -93,23 +92,64 @@ keys.addEventListener('click', e => {
                     if (!displayContent.includes('.')) {
                         // Append '.' to the displayed number
                         display.textContent += '.';
-                    } else {
-                        // Don't append anything to prevent 2 or more decimal points in a number
-                    }
+                    } 
                 // If decimal key does not follow a number key (could be operator, equal, AC keys) 
                 } else {
                     display.textContent = '0.';
                 }
-            } else { 
-                // Don't do anything.
-            }
-        }
-
-
-
-
+            } 
+        }   
 
         // If key is an equal sign
+        // IMPORTANT: runningTotalLog will be reset
+        /* 
+        if (keyContent === '=') {
+            If previous key is a equal sign or previous key is an operator
+                Do nothing
+
+
+            If previous key is a number
+                Call operation() function
+                Push current result to runningTotalLog
+                Display current result
+
+
+
+            If previous key is a decimal
+                If displayed number has existing decimal point
+                    Call operation() function
+                If displayed number has no existing decimal point
+                    Remove decimal point to displayed number // Find the integer value of the displayed number
+                    Call operation() function
+
+        }
+
+        */
+        if (keyContent === '=') {
+            // If prev key is neither an equal sign nor an operator
+            if (prevKey !== '=') {
+                // If previous key is a dcimal
+                if (prevKey === '.') {
+                    // If displayed number has no existing decimal point
+                    if (!displayContent.includes('.')) {
+                        let curRunningTotal = operation(prevRunningTotal, parseInt(displayContent), prevOperator)
+                    } else { // If displayed number has existing decimal point
+                        // Do nothing
+                    }
+                }
+
+                let curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator)
+                display.textContent = curRunningTotal
+                
+            } 
+            runningTotalLog = ['0'];
+            keyPressCount = 0;
+            keyPressLog = ['0'];
+
+            operatorPressCount = 0;
+            operatorPressLog = ['+'];
+
+        }
 
 
 
