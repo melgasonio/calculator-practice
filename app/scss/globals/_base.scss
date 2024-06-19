@@ -1,0 +1,27 @@
+// Set border-box for box-sizing property and make scrolling behavior smooth for the entire document.
+html {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+  
+// Make the descendants of all * inherit their html's properties. 
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+// Do not allow the browser to adjust the margins. 
+* {
+    margin: 0;
+}
+  
+// Make media elements as block instead of inline, and constrain their maximum width to their parent's width.
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+// Create a stacking content. This is only applicable when using a JS Framework like React.  
+#root, #__next {
+    isolation: isolate;
+}
+  
