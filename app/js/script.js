@@ -127,8 +127,8 @@ keys.addEventListener('click', e => {
                 }
             }
 
-            // If key is AC
-            if (keyContent === 'AC') {
+            // If key is CE
+            if (keyContent === 'CE') {
                 display.textContent = '0';
                 keyPressCount = 0;
                 keyPressLog = ['0'];
