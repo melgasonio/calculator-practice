@@ -1,0 +1,21 @@
+@forward 'globals';
+@use 'util' as u;
+@forward 'layout';
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: u.$font;
+}
+
+.calculator {
+    --calculator-background-color: black;
+    --calculator-text-color: white;
+
+    width: 80vw;
+    height: 75vh;
+    margin: 0 auto;
+    overflow: auto;
+	background-color: var(--calculator-background-color);
+    color: var(--calculator-text-color)
+}

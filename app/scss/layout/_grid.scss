@@ -1,0 +1,33 @@
+.grid {
+    display: grid;
+    grid-template-rows: 1.5fr 5fr;
+    gap: .5rem;
+ 
+    align-items: center;
+    justify-content: center;
+       
+
+
+    &__display {
+
+    }
+    &__keys {
+        .grid__key {
+            &--operator {
+
+            }
+            &--number {
+
+            }
+            &--decimal {
+
+            }
+            &--clear {
+
+            }
+            &--equal {
+
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 const calculator = document.querySelector('.calculator');
-const keys = document.querySelector('.calculator_keys');
-const display = document.querySelector('.calculator_display');
+const keys = document.querySelector('.calculator__keys');
+const display = document.querySelector('.calculator__display');
 
 let keyPressCount = 0;
 let keyPressLog = ['0'];
