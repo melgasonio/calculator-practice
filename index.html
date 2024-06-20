@@ -11,7 +11,7 @@
     <title>Calculator</title>
 </head>
 <body>
-    <main class="flex flex__main flex__main--center">
+    <main class="bg-dark">
         <div class="calculator grid">
             <div class="calculator__display grid__display">0</div>
             <div class="calculator__keys grid__keys">
@@ -22,6 +22,7 @@
                 <button class="grid__key grid__key--number">7</button>
                 <button class="grid__key grid__key--number">8</button>
                 <button class="grid__key grid__key--number">9</button>
+                <button class="grid__key grid__key--equal grid__key--large" data-action="calculate">=</button>
                 <button class="grid__key grid__key--number">4</button>
                 <button class="grid__key grid__key--number">5</button>
                 <button class="grid__key grid__key--number">6</button>
@@ -31,7 +32,6 @@
                 <button class="grid__key grid__key--number">0</button>
                 <button class="grid__key grid__key--decimal" data-action="decimal">.</button>
                 <button class="grid__key grid__key--clear" data-action="clear">AC</button>
-                <button class="grid__key grid__key--equal grid__key--large" data-action="calculate">=</button>
             </div>
         </div>
     </main>
