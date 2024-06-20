@@ -1,33 +1,41 @@
 .grid {
     display: grid;
     grid-template-rows: 1.5fr 5fr;
+    grid-template-columns: 1fr;
     gap: .5rem;
  
-    align-items: center;
+    align-items: top;
     justify-content: center;
-       
 
 
     &__display {
-
     }
     &__keys {
-        .grid__key {
-            &--operator {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(5, 1fr);
 
-            }
-            &--number {
+    }
+    &__key {
 
-            }
-            &--decimal {
-
-            }
-            &--clear {
-
-            }
-            &--equal {
-
-            }
+        &--operator {
+            
         }
+        &--number {
+           
+        }
+        &--decimal {
+           
+        }
+        &--clear {
+            
+        }
+        &--equal {
+           grid-column-start: 4;
+           grid-column-end: 5;
+           grid-row-start: 2;
+           grid-row-end: 6;
+        }
+
     }
 }

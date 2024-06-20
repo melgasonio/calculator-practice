@@ -3,19 +3,30 @@
 @forward 'layout';
 
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
     font-family: u.$font;
 }
 
-.calculator {
-    --calculator-background-color: black;
-    --calculator-text-color: white;
 
-    width: 80vw;
-    height: 75vh;
+
+.calculator {
+    --calculator-background-color: hsl(240, 29%, 6%);
+    --calculator-text-color: hsl(0, 0%, 57%);
+
+    max-width: 720px;
+    height: 100vh;
     margin: 0 auto;
     overflow: auto;
 	background-color: var(--calculator-background-color);
-    color: var(--calculator-text-color)
+    color: var(--calculator-text-color);
+
+    &__display {
+        border: 1px yellow solid;
+    }
+
+    &__keys {
+        border: 1px yellow solid;
+    }
+
+
+
 }
