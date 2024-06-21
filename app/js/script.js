@@ -36,44 +36,48 @@ keys.addEventListener('click', e => {
         if (
             numKeys.includes(parseFloat(keyContent)) ||
             operatorKeys.includes(keyContent) ||
-            keyContent === '.'
+            keyContent === '.' ||
+            keyContent === 'C' ||
+            keyContent === 'DEL'
         ) {
             // If key is a number
             if (numKeys.includes(parseFloat(keyContent))) {
-                // If prevKeyType is 'number'
-                if (numKeys.includes(parseFloat(prevKey))) {
-                    // If displayContent is '0'; key will replace current display content
-                    if (displayContent === '0') {
-                        display.textContent = keyContent;
-                    }
-                    // Else; current key will append display content
-                    else {
-                        display.textContent += keyContent;
-                    }
-                }
-
-                // If previous key is an operator, equal sign or AC, replace the display content with keyContent
+                // If previous key is a number
+                // If the displayed number is 0, replace 0 with the key
+                // It is not conventional to start numbers with 0
+                // If the previous key is an operator, clear buttons or equal, also replace the displayed number with the key. This is because these buttons prompt a next operation or an end of operations
+                // If the displayed number does not fall under the conditions above, add the key as the rightmost digit of the displayed number  
                 if (
+                    displayContent === '0'||
                     operatorKeys.includes(prevKey) || 
                     prevKey === '=' ||
-                    prevKey === 'AC'
+                    prevKey === 'CE'
                 ) {
                     display.textContent = keyContent;
                 }
-                
-                // If previous key is a decimal point, append the number to the current display.
-                if (prevKey === '.') {
+                else {
                     display.textContent += keyContent;
                 }
-
             }
 
 
             // If key is an operator
             if (operatorKeys.includes(keyContent)) {
                 // If previous key is an operator key
+                // The last operation key before this will be removed from the list of pressed operation keys
+                // The new operation key will replace that, ensuring that the operation key is the most updated operator that the user wants
                 if (operatorKeys.includes(prevKey)) {
                     operatorPressLog.splice(operatorPressCount);
+                
+                // If the previous key is not an operator, meaning there are no two consecutive operator keys in the list of keys pressed
+                // Call operation function
+                // The previous running total, which is by default equal to 0, and is the last element in the list of running total log, will be under an arithmetic operation as defined by operation function
+                // The number before an operator key is pressed (displayContent) will then be added to, subtracted from, multiplied to or divide previous running total
+                // The result of operation function will be assigned to current running total variable
+                // Current running total variable will be saved and added to the list, for the following operations
+                // The resut will be displayed
+                // Operator press count will increase by 1 
+                //This counter will be used as the index for previous operator and previous running total variables
                 } else { // Else
                     curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator);
                     runningTotalLog.push(curRunningTotal);
@@ -83,6 +87,7 @@ keys.addEventListener('click', e => {
                     operatorPressCount += 1;
                 }
 
+                // Add operator key to operatorPressLog list for next call of operation function
                 operatorPressLog.push(keyContent);
 
             }
@@ -90,45 +95,66 @@ keys.addEventListener('click', e => {
 
             // If key is a decimal
             if (keyContent === '.') {
-                // If previous key is a decimal point
+                // If previous key is a decimal point or displayed number has a decimal point already, don't do anything
+                // If previous number, add the decimal point to the right most digit
+                // 0. will display for non-number previous buttons
                 if (prevKey !== '.') {
-                    // If decimal key follows a number key
-                    if (numKeys.includes(parseFloat(prevKey))) {
-                        // If displayed number has no decimal point
+                    if (numKeys.includes(parseFloat(prevKey)) || prevKey === 'DEL') {
                         if (!displayContent.includes('.')) {
-                            // Append '.' to the displayed number
                             display.textContent += '.';
-                        } 
-                    // If decimal key does not follow a number key (could be operator, equal, AC keys) 
-                    } else {
+                        }
+                    }
+                    if (
+                        operatorKeys.includes(prevKey) ||
+                        prevKey === '=' ||
+                        prevKey === 'CE' ||
+                        prevKey === 'C'
+                    ) {
                         display.textContent = '0.';
                     }
                 }
             }
 
+            // If key is C
+            // Only clear the current display without affecting anything else
+            if (keyContent === 'C') {
+                display.textContent = '0';
+            }
+
+            // If key is DEL
+            // Remove only the right most digit or decimal
+            // 
+            if (keyContent === 'DEL') {
+                let afterDel = displayContent.slice(0,-1);
+                if (afterDel === '') {
+                    afterDel = '0';
+                }
+
+                display.textContent = afterDel;
+                console.log(afterDel);
+
+            }
+
+            // Increase key presses count by 1
             keyPressCount += 1;
             keyPressLog.push(keyContent);            
 
         } else { 
-            // If key is an equal sign
+            // For CE, the calculator will be reset and operations will be halted
+            // Set default values and states of all variables and lists
+            // For equal sign, the operations will not be halted but the default values will be set
             if (keyContent === '=') {
-            // If prev key is not an equal sign
                 if (prevKey !== '=') {
-                    // If previous key is a dcimal
-                    if (prevKey === '.') {
-                        // If displayed number has no existing decimal point
-                        if (!displayContent.includes('.')) {
-                            curRunningTotal = operation(prevRunningTotal, parseInt(displayContent), prevOperator)
-                        }
-                    }
 
                     curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator)
                     display.textContent = curRunningTotal
+
+                    keyPressLog.push(keyContent);
+                    keyPressCount += 1;
                 }
             }
 
-            // If key is CE
-            if (keyContent === 'CE') {
+            if (keyContent === 'C') {
                 display.textContent = '0';
                 keyPressCount = 0;
                 keyPressLog = ['0'];
@@ -139,15 +165,13 @@ keys.addEventListener('click', e => {
             operatorPressCount = 0;
             operatorPressLog = ['+'];
 
+
         }
 
         // If curRunningTotal is infinity (division by 0) 
         if (curRunningTotal === Infinity) {
             display.textContent = 'Cannot divide by 0';
         }
-
-        keyPressCount += 1;
-        keyPressLog.push(keyContent);
     }
 })
 
