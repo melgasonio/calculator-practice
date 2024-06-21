@@ -37,7 +37,7 @@ keys.addEventListener('click', e => {
             numKeys.includes(parseFloat(keyContent)) ||
             operatorKeys.includes(keyContent) ||
             keyContent === '.' ||
-            keyContent === 'C' ||
+            keyContent === 'CE' ||
             keyContent === 'DEL'
         ) {
             // If key is a number
@@ -115,9 +115,9 @@ keys.addEventListener('click', e => {
                 }
             }
 
-            // If key is C
+            // If key is CE
             // Only clear the current display without affecting anything else
-            if (keyContent === 'C') {
+            if (keyContent === 'CE') {
                 display.textContent = '0';
             }
 
