@@ -6,11 +6,9 @@ body {
     font-family: u.$font;
 }
 
-
-
 .calculator {
     --calculator-background-color: hsl(240, 29%, 6%);
-    --calculator-text-color: hsl(0, 0%, 57%);
+    --calculator-text-color: hsl(185, 64%, 89%);
 
     max-width: 720px;
     height: 100vh;
@@ -20,11 +18,11 @@ body {
     color: var(--calculator-text-color);
 
     &__display {
-        border: 1px yellow solid;
+        font-size: 2.5em;
+
     }
 
     &__keys {
-        border: 1px yellow solid;
     }
 
 
