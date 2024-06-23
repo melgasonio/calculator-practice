@@ -123,16 +123,17 @@ keys.addEventListener('click', e => {
 
             // If key is DEL
             // Remove only the right most digit or decimal
-            // 
             if (keyContent === 'DEL') {
                 let afterDel = displayContent.slice(0,-1);
-                if (afterDel === '') {
-                    afterDel = '0';
+                // Do not change anything on the display if the  display is a result that was triggered by an operator or equal sign as previous key
+                if (prevKey !== '=' || !operatorKeys.includes(prevKey)) {
+                    if (afterDel === '') {
+                        afterDel = '0';
+                    }
+    
+                    display.textContent = afterDel;
+                    console.log(afterDel);  
                 }
-
-                display.textContent = afterDel;
-                console.log(afterDel);
-
             }
 
             // Increase key presses count by 1
