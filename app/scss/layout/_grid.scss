@@ -9,22 +9,33 @@
 
 
     &__display {
-        display: grid;
-        grid-template-rows: 1fr;
-        grid-template-columns: auto;
-
-        align-items: end;
-        justify-content: right;
     }
     &__keys {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(5, 1fr);
+
     }
     &__key {
-        &--number-zero {
-            grid-column-start: 1;
-            grid-column-end: 3;
+
+        &--operator {
+            
         }
+        &--number {
+           
+        }
+        &--decimal {
+           
+        }
+        &--clear {
+            
+        }
+        &--equal {
+           grid-column-start: 4;
+           grid-column-end: 5;
+           grid-row-start: 2;
+           grid-row-end: 6;
+        }
+
     }
 }
