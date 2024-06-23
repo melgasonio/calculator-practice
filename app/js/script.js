@@ -160,7 +160,7 @@ keys.addEventListener('click', e => {
                 if (keyContent === 'DEL') {
                     let afterDel = displayContent.slice(0,-1);
                     // Do not delete a digit or decimal point if the current display is a result that was triggered by an operator or equal ign as previous key
-                    if (numKeys.includes(prevKey) || prevKey === '.') {
+                    if (numKeys.includes(parseFloat(prevKey)) || prevKey === '.') {
                         if (afterDel === '') {
                             afterDel = '0';
                         }
