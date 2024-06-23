@@ -57,10 +57,34 @@ keys.addEventListener('click', e => {
                     display.textContent = keyContent;
                 }
                 else {
-                    display.textContent += keyContent;
+                    // Set 16 as maximum number of digits
+                    if (displayContent.length < 16) {
+                        display.textContent += keyContent;
+                    }
                 }
             }
 
+            // If key is a decimal
+            if (keyContent === '.') {
+                // If previous key is a decimal point or displayed number has a decimal point already, don't do anything
+                // If previous number, add the decimal point to the right most digit
+                // 0. will display for non-number previous buttons
+                if (prevKey !== '.') {
+                    if (numKeys.includes(parseFloat(prevKey)) || prevKey === 'DEL') {
+                        if (!displayContent.includes('.')) {
+                            display.textContent += '.';
+                        }
+                    }
+                    if (
+                        operatorKeys.includes(prevKey) ||
+                        prevKey === '=' ||
+                        prevKey === 'CE' ||
+                        prevKey === 'C'
+                    ) {
+                        display.textContent = '0.';
+                    }
+                }
+            }
 
             // If key is an operator
             if (operatorKeys.includes(keyContent)) {
@@ -92,30 +116,6 @@ keys.addEventListener('click', e => {
                 operatorPressLog.push(keyContent);
 
             }
-
-
-            // If key is a decimal
-            if (keyContent === '.') {
-                // If previous key is a decimal point or displayed number has a decimal point already, don't do anything
-                // If previous number, add the decimal point to the right most digit
-                // 0. will display for non-number previous buttons
-                if (prevKey !== '.') {
-                    if (numKeys.includes(parseFloat(prevKey)) || prevKey === 'DEL') {
-                        if (!displayContent.includes('.')) {
-                            display.textContent += '.';
-                        }
-                    }
-                    if (
-                        operatorKeys.includes(prevKey) ||
-                        prevKey === '=' ||
-                        prevKey === 'CE' ||
-                        prevKey === 'C'
-                    ) {
-                        display.textContent = '0.';
-                    }
-                }
-            }
-
             
             // Increase key presses count by 1
             keyPressCount += 1;
@@ -165,10 +165,7 @@ keys.addEventListener('click', e => {
                             afterDel = '0';
                         }
                         
-                        display.textContent = afterDel;
-                        
-                    } else {
-                        console.log('prevKey is not an operator/=')
+                        display.textContent = afterDel; 
                     }
                 }
             }
