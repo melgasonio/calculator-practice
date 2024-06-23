@@ -33,12 +33,13 @@ keys.addEventListener('click', e => {
 
 
         // If key is a number, operator or decimal
+        // Only number, operator and decimal keys are specific to arithmetic operations
+        // DEL, CE, C and = keys are do not have inherent values to arithmetic operations but for user experience purposes only
+
         if (
             numKeys.includes(parseFloat(keyContent)) ||
             operatorKeys.includes(keyContent) ||
-            keyContent === '.' ||
-            keyContent === 'CE' ||
-            keyContent === 'DEL'
+            keyContent === '.'
         ) {
             // If key is a number
             if (numKeys.includes(parseFloat(keyContent))) {
@@ -46,7 +47,7 @@ keys.addEventListener('click', e => {
                 // If the displayed number is 0, replace 0 with the key
                 // It is not conventional to start numbers with 0
                 // If the previous key is an operator, clear buttons or equal, also replace the displayed number with the key. This is because these buttons prompt a next operation or an end of operations
-                // If the displayed number does not fall under the conditions above, add the key as the rightmost digit of the displayed number  
+                // If the displayed number does not fall under the conditions above, add the key as the rightmost digit of the displayed number
                 if (
                     displayContent === '0'||
                     operatorKeys.includes(prevKey) || 
@@ -115,26 +116,7 @@ keys.addEventListener('click', e => {
                 }
             }
 
-            // If key is CE
-            // Only clear the current display without affecting anything else
-            if (keyContent === 'CE') {
-                display.textContent = '0';
-            }
-
-            // If key is DEL
-            // Remove only the right most digit or decimal
-            // 
-            if (keyContent === 'DEL') {
-                let afterDel = displayContent.slice(0,-1);
-                if (afterDel === '') {
-                    afterDel = '0';
-                }
-
-                display.textContent = afterDel;
-                console.log(afterDel);
-
-            }
-
+            
             // Increase key presses count by 1
             keyPressCount += 1;
             keyPressLog.push(keyContent);            
@@ -143,28 +125,53 @@ keys.addEventListener('click', e => {
             // For CE, the calculator will be reset and operations will be halted
             // Set default values and states of all variables and lists
             // For equal sign, the operations will not be halted but the default values will be set
-            if (keyContent === '=') {
-                if (prevKey !== '=') {
-
-                    curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator)
-                    display.textContent = curRunningTotal
-
-                    keyPressLog.push(keyContent);
-                    keyPressCount += 1;
+            if (keyContent === '=' || keyContent === 'C') {
+                if (keyContent === '=') {
+                    if (prevKey !== '=') {
+                        
+                        curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator)
+                        display.textContent = curRunningTotal
+                        
+                        keyPressLog.push(keyContent);
+                        keyPressCount += 1;
+                    }
+                }
+                
+                if (keyContent === 'C') {
+                    display.textContent = '0';
+                    keyPressCount = 0;
+                    keyPressLog = ['0'];
+                }
+                
+                runningTotalLog = ['0'];
+                
+                operatorPressCount = 0;
+                operatorPressLog = ['+'];
+            }
+            if (keyContent === 'CE' || keyContent === 'DEL') {
+                // If key is CE
+                // Only clear the current display without affecting anything else
+                if (keyContent === 'CE') {
+                    display.textContent = '0';
+                }
+    
+                // If key is DEL
+                // Remove only the right most digit or decimal
+                if (keyContent === 'DEL') {
+                    let afterDel = displayContent.slice(0,-1);
+                    // Do not delete a digit or decimal point if the current display is a result that was triggered by an operator or equal ign as previous key
+                    if (numKeys.includes(prevKey) || prevKey === '.') {
+                        if (afterDel === '') {
+                            afterDel = '0';
+                        }
+                        
+                        display.textContent = afterDel;
+                        
+                    } else {
+                        console.log('prevKey is not an operator/=')
+                    }
                 }
             }
-
-            if (keyContent === 'C') {
-                display.textContent = '0';
-                keyPressCount = 0;
-                keyPressLog = ['0'];
-            }
-
-            runningTotalLog = ['0'];
-
-            operatorPressCount = 0;
-            operatorPressLog = ['+'];
-
 
         }
 
@@ -172,6 +179,11 @@ keys.addEventListener('click', e => {
         if (curRunningTotal === Infinity) {
             display.textContent = 'Cannot divide by 0';
         }
+
+        console.log('key log: ', keyPressLog)
+        console.log('operator log: ', operatorPressLog)
+        console.log('running total log: ', runningTotalLog)
+        console.log('prevKey: ', prevKey)
     }
 })
 
