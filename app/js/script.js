@@ -1,6 +1,7 @@
 const calculator = document.querySelector('.calculator');
 const keys = document.querySelector('.calculator__keys');
 const display = document.querySelector('.calculator__display');
+const buttons = document.querySelectorAll('button');
 
 let keyPressCount = 0;
 let keyPressLog = ['0'];
@@ -10,194 +11,166 @@ let operatorPressLog = ['+'];
 
 let runningTotalLog = ['0'];
 
-let numKeys = []; // Initialize an empty list of number keys
-for (let i = 0; i <= 9; i++) {
-    numKeys.push(i); // Iterate over a loop that goes through numbers 1 to 9 and push each iterated number to numKeys list
-}
+const numKeys = Array.from({ length: 10 }, (_, i) => i); // Initialize an array with numbers 0 to 9
+const operatorKeys = ['+', '-', '÷', '*']; // Define operator keys
 
 keys.addEventListener('click', e => {
-
     if (e.target.matches('button')) {
         const key = e.target; // Key being pressed
         const keyContent = key.textContent; // Content of the key
-        const displayContent = display.textContent; // Content of the display
+        handleKeyPress(keyContent);
+    }
+});
 
-
-
-        const operatorKeys = ['+', '-', '÷', '*']; // Define operatorKeys variable, which is a list of all operator symbols
-
-        let prevKey = keyPressLog[keyPressCount]; // Define prevKey variable, which is the last element in keyPressLog list
-        let prevOperator = operatorPressLog[operatorPressCount]; // Define prevOperator variable, which is the last element in operatorPressLog list
-        let prevRunningTotal = parseFloat(runningTotalLog[operatorPressCount]);
-        let curRunningTotal;
-
-
-        // If key is a number, operator or decimal
-        // Only number, operator and decimal keys are specific to arithmetic operations
-        // DEL, CE, C and = keys are do not have inherent values to arithmetic operations but for user experience purposes only
-
-        if (
-            numKeys.includes(parseFloat(keyContent)) ||
-            operatorKeys.includes(keyContent) ||
-            keyContent === '.'
-        ) {
-            // If key is a number
-            if (numKeys.includes(parseFloat(keyContent))) {
-                // If previous key is a number
-                // If the displayed number is 0, replace 0 with the key
-                // It is not conventional to start numbers with 0
-                // If the previous key is an operator, clear buttons or equal, also replace the displayed number with the key. This is because these buttons prompt a next operation or an end of operations
-                // If the displayed number does not fall under the conditions above, add the key as the rightmost digit of the displayed number
-                if (
-                    displayContent === '0'||
-                    operatorKeys.includes(prevKey) || 
-                    prevKey === '=' ||
-                    prevKey === 'CE'
-                ) {
-                    display.textContent = keyContent;
-                }
-                else {
-                    // Set 16 as maximum number of digits
-                    if (displayContent.length < 16) {
-                        display.textContent += keyContent;
-                    }
-                }
-            }
-
-            // If key is a decimal
-            if (keyContent === '.') {
-                // If previous key is a decimal point or displayed number has a decimal point already, don't do anything
-                // If previous number, add the decimal point to the right most digit
-                // 0. will display for non-number previous buttons
-                if (prevKey !== '.') {
-                    if (numKeys.includes(parseFloat(prevKey)) || prevKey === 'DEL') {
-                        if (!displayContent.includes('.')) {
-                            display.textContent += '.';
-                        }
-                    }
-                    if (
-                        operatorKeys.includes(prevKey) ||
-                        prevKey === '=' ||
-                        prevKey === 'CE' ||
-                        prevKey === 'C'
-                    ) {
-                        display.textContent = '0.';
-                    }
-                }
-            }
-
-            // If key is an operator
-            if (operatorKeys.includes(keyContent)) {
-                // If previous key is an operator key
-                // The last operation key before this will be removed from the list of pressed operation keys
-                // The new operation key will replace that, ensuring that the operation key is the most updated operator that the user wants
-                if (operatorKeys.includes(prevKey)) {
-                    operatorPressLog.splice(operatorPressCount);
-                
-                // If the previous key is not an operator, meaning there are no two consecutive operator keys in the list of keys pressed
-                // Call operation function
-                // The previous running total, which is by default equal to 0, and is the last element in the list of running total log, will be under an arithmetic operation as defined by operation function
-                // The number before an operator key is pressed (displayContent) will then be added to, subtracted from, multiplied to or divide previous running total
-                // The result of operation function will be assigned to current running total variable
-                // Current running total variable will be saved and added to the list, for the following operations
-                // The resut will be displayed
-                // Operator press count will increase by 1 
-                //This counter will be used as the index for previous operator and previous running total variables
-                } else { // Else
-                    curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator);
-                    runningTotalLog.push(curRunningTotal);
-
-                    display.textContent = curRunningTotal;
-
-                    operatorPressCount += 1;
-                }
-
-                // Add operator key to operatorPressLog list for next call of operation function
-                operatorPressLog.push(keyContent);
-
-            }
-            
-            // Increase key presses count by 1
-            keyPressCount += 1;
-            keyPressLog.push(keyContent);            
-
-        } else { 
-            // For CE, the calculator will be reset and operations will be halted
-            // Set default values and states of all variables and lists
-            // For equal sign, the operations will not be halted but the default values will be set
-            if (keyContent === '=' || keyContent === 'C') {
-                if (keyContent === '=') {
-                    if (prevKey !== '=') {
-                        
-                        curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator)
-                        display.textContent = curRunningTotal
-                        
-                        keyPressLog.push(keyContent);
-                        keyPressCount += 1;
-                    }
-                }
-                
-                if (keyContent === 'C') {
-                    display.textContent = '0';
-                    keyPressCount = 0;
-                    keyPressLog = ['0'];
-                }
-                
-                runningTotalLog = ['0'];
-                
-                operatorPressCount = 0;
-                operatorPressLog = ['+'];
-            }
-            if (keyContent === 'CE' || keyContent === 'DEL') {
-                // If key is CE
-                // Only clear the current display without affecting anything else
-                if (keyContent === 'CE') {
-                    display.textContent = '0';
-                }
+document.addEventListener('keydown', e => {
+    const key = e.key;
+    if (isValidKey(key)) {
+        handleKeyPress(mapKeyToContent(key));
+        fadeOutButton(mapKeyToContent(key));
+    }
     
-                // If key is DEL
-                // Remove only the right most digit or decimal
-                if (keyContent === 'DEL') {
-                    let afterDel = displayContent.slice(0,-1);
-                    // Do not delete a digit or decimal point if the current display is a result that was triggered by an operator or equal ign as previous key
-                    if (numKeys.includes(parseFloat(prevKey)) || prevKey === '.') {
-                        if (afterDel === '') {
-                            afterDel = '0';
-                        }
-                        
-                        display.textContent = afterDel; 
-                    }
-                }
-            }
+});
 
-        }
+// Function to handle number, decimal, operator, and special keys
+function handleKeyPress(keyContent) {
+    const displayContent = display.textContent; // Content of the display
+    let prevKey = keyPressLog[keyPressCount]; // Last pressed key
+    let prevOperator = operatorPressLog[operatorPressCount]; // Last operator
+    let prevRunningTotal = parseFloat(runningTotalLog[operatorPressCount]);
+    let curRunningTotal;
 
-        // If curRunningTotal is infinity (division by 0) 
-        if (curRunningTotal === Infinity) {
-            display.textContent = 'Cannot divide by 0';
-        }
-
-        console.log('key log: ', keyPressLog)
-        console.log('operator log: ', operatorPressLog)
-        console.log('running total log: ', runningTotalLog)
-        console.log('prevKey: ', prevKey)
+    // Handle number and decimal keys
+    if (numKeys.includes(parseFloat(keyContent)) || keyContent === '.') {
+        handleNumberAndDecimalKeys(keyContent, prevKey, displayContent);
     }
-})
 
-// Define operation function with three params (int, int, str)
-function operation(firstNum, secondNum, operator) {
+    // Handle operator keys
+    if (operatorKeys.includes(keyContent)) {
+        handleOperatorKeys(keyContent, prevKey, displayContent, prevOperator, prevRunningTotal);
+    }
 
-    if (operator === '+') {
-        return firstNum + secondNum;
-    }
-    if (operator === '-') {
-        return firstNum - secondNum;
-    }
-    if (operator === '*') {
-        return firstNum * secondNum;
-    }
-    if (operator === '÷') {
-        return firstNum / secondNum;
+    // Handle special keys (C, CE, DEL, =)
+    handleSpecialKeys(keyContent, prevKey, displayContent, prevOperator, prevRunningTotal);
+
+    // If curRunningTotal is infinity (division by 0)
+    if (curRunningTotal === Infinity) {
+        display.textContent = 'Cannot divide by 0';
     }
 }
 
+// Function to handle number and decimal keys
+function handleNumberAndDecimalKeys(keyContent, prevKey, displayContent) {
+    if (numKeys.includes(parseFloat(keyContent))) {
+        if (displayContent === '0' || operatorKeys.includes(prevKey) || prevKey === '=' || prevKey === 'CE') {
+            display.textContent = keyContent;
+        } else {
+            if (displayContent.length < 16) {
+                display.textContent += keyContent;
+            }
+        }
+    }
+
+    if (keyContent === '.') {
+        if (!displayContent.includes('.')) {
+            display.textContent += '.';
+        } else if (['+', '-', '÷', '*', '=', 'CE', 'C'].includes(prevKey)) {
+            display.textContent = '0.';
+        }
+    }
+    updateKeyLogs(keyContent);
+}
+
+// Function to handle operator keys
+function handleOperatorKeys(keyContent, prevKey, displayContent, prevOperator, prevRunningTotal) {
+    if (operatorKeys.includes(prevKey)) {
+        operatorPressLog.splice(operatorPressCount, 1, keyContent);
+    } else {
+        curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator);
+        runningTotalLog.push(curRunningTotal);
+        display.textContent = curRunningTotal;
+        operatorPressCount += 1;
+        operatorPressLog.push(keyContent);
+    }
+    updateKeyLogs(keyContent);
+}
+
+// Function to handle special keys (C, CE, DEL, =)
+function handleSpecialKeys(keyContent, prevKey, displayContent, prevOperator, prevRunningTotal) {
+    if (keyContent === '=') {
+        if (prevKey !== '=') {
+            curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator);
+            display.textContent = curRunningTotal;
+        }
+        resetKeyLogs(keyContent);
+    } else if (keyContent === 'C') {
+        display.textContent = '0';
+        resetCalculator();
+    } else if (keyContent === 'CE') {
+        display.textContent = '0';
+    } else if (keyContent === 'DEL') {
+        let afterDel = displayContent.slice(0, -1) || '0';
+        if (['+', '-', '÷', '*', '=', 'CE', 'C'].includes(prevKey)) return;
+        display.textContent = afterDel;
+    }
+    updateKeyLogs(keyContent);
+}
+
+// Function to perform arithmetic operations
+function operation(firstNum, secondNum, operator) {
+    switch (operator) {
+        case '+': return firstNum + secondNum;
+        case '-': return firstNum - secondNum;
+        case '*': return firstNum * secondNum;
+        case '÷': return firstNum / secondNum;
+        default: return secondNum;
+    }
+}
+
+// Helper functions to update and reset logs
+function updateKeyLogs(keyContent) {
+    keyPressCount += 1;
+    keyPressLog.push(keyContent);
+}
+
+function resetKeyLogs(keyContent) {
+    keyPressLog.push(keyContent);
+    keyPressCount += 1;
+}
+
+function resetCalculator() {
+    keyPressCount = 0;
+    keyPressLog = ['0'];
+    operatorPressCount = 0;
+    operatorPressLog = ['+'];
+    runningTotalLog = ['0'];
+}
+
+// Helper function to check if a key is valid
+function isValidKey(key) {
+    const validKeys = [...numKeys.map(String), '.', '+', '-', '*', '/', '=', 'Backspace', 'Delete', 'Escape', 'Enter'];
+    return validKeys.includes(key);
+}
+
+// Helper function to map keyboard keys to calculator content
+function mapKeyToContent(key) {
+    if (key === 'Backspace') return 'DEL';
+    if (key === 'Delete') return 'CE';
+    if (key === 'Escape') return 'C';
+    if (key === '/') return '÷';
+    if (key === 'Enter') return '=';
+
+    return key;
+}
+
+// Helper function that fades out a key (adds and removes .fade-out class) 
+function fadeOutButton(keyContent) {
+    buttons.forEach(button => {
+        if (button.textContent === keyContent) {
+            button.style.setProperty('--button-bg', '#4e4e64');
+            
+            setTimeout(() => {
+                button.style.setProperty('--button-bg', '#3a3a45');
+            }, 200);
+        }
+    });
+}
