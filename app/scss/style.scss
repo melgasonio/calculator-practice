@@ -18,10 +18,16 @@ body {
     color: var(--calculator-text-color);
 
     &__display {
-        font-size: 2.5em;
+        font-size: 8em;
+
+        @media (min-width: 720px) {
+            font-size: 6em;
+        }
 
     }
 
     &__keys {
+        font-size: 3em;
+
     }
 }
