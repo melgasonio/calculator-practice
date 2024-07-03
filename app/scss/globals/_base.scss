@@ -20,6 +20,10 @@ img, picture, video, canvas, svg {
     max-width: 100%;
 }
 
+button {
+    cursor: pointer;
+}
+
 // Create a stacking content. This is only applicable when using a JS Framework like React.  
 #root, #__next {
     isolation: isolate;
