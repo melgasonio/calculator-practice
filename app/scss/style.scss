@@ -18,16 +18,21 @@ body {
     color: var(--calculator-text-color);
 
     &__display {
-        font-size: 8em;
+        font-size: 6em;
 
         @media (min-width: 720px) {
-            font-size: 6em;
+            font-size: 4em;
         }
-
     }
 
     &__keys {
-        font-size: 3em;
+        font-size: 2em;
 
+        .grid__key {
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
     }
 }
