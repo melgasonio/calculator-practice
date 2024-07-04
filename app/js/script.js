@@ -19,14 +19,16 @@ keys.addEventListener('click', e => {
         const key = e.target; // Key being pressed
         const keyContent = key.textContent; // Content of the key
         handleKeyPress(keyContent);
+        fadeOutButton(keyContent);
     }
 });
 
 document.addEventListener('keydown', e => {
     const key = e.key;
+    const keyContent = mapKeyToContent(key);
     if (isValidKey(key)) {
-        handleKeyPress(mapKeyToContent(key));
-        fadeOutButton(mapKeyToContent(key));
+        handleKeyPress(keyContent);
+        fadeOutButton(keyContent);
     }
     
 });
