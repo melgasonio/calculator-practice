@@ -35,7 +35,7 @@ body {
         }
 
         .grid__key {
-            border: none;
+            border: 1px solid var(--calculator-bg);
             border-radius: 5px;
             background-color: var(--button-bg);
             color: var(--button-clr);
