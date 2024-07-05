@@ -20,25 +20,25 @@ body {
     color: var(--calculator-clr);
 
     &__display {
-        font-size: 6em;
+        font-size: 32px;
 
         @media (min-width: 720px) {
-            font-size: 4em;
+            font-size: 64px;
         }
     }
 
     &__keys {
-        font-size: 2em;
+        font-size: 24px;
+
+        @media (min-width: 720px) {
+            font-size: 48px;
+        }
 
         .grid__key {
             border: none;
             border-radius: 5px;
             background-color: var(--button-bg);
             color: var(--button-clr);
-
-            &:hover {
-                opacity: 0.9;
-            }
 
             &--equal {
                 background-color:hsl(190, 64%, 34%);
