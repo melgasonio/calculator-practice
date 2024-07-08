@@ -30,7 +30,6 @@ document.addEventListener('keydown', e => {
         handleKeyPress(keyContent);
         fadeOutButton(keyContent);
     }
-    
 });
 
 // Function to handle number, decimal, operator, and special keys
@@ -53,15 +52,11 @@ function handleKeyPress(keyContent) {
 
     // Handle special keys (C, CE, DEL, =)
     handleSpecialKeys(keyContent, prevKey, displayContent, prevOperator, prevRunningTotal);
-
-    // If curRunningTotal is infinity (division by 0)
-    if (curRunningTotal === Infinity) {
-        display.textContent = 'Cannot divide by 0';
-    }
 }
 
 // Function to handle number and decimal keys
 function handleNumberAndDecimalKeys(keyContent, prevKey, displayContent) {
+    // If key is a number
     if (numKeys.includes(parseFloat(keyContent))) {
         if (displayContent === '0' || operatorKeys.includes(prevKey) || prevKey === '=' || prevKey === 'CE') {
             display.textContent = keyContent;
@@ -101,7 +96,11 @@ function handleSpecialKeys(keyContent, prevKey, displayContent, prevOperator, pr
     if (keyContent === '=') {
         if (prevKey !== '=') {
             curRunningTotal = operation(prevRunningTotal, parseFloat(displayContent), prevOperator);
-            display.textContent = curRunningTotal;
+            if (curRunningTotal === Infinity) {
+                display.textContent = 'Cannot divide by 0'
+            } else {
+                display.textContent = curRunningTotal;
+            }
         }
         resetKeyLogs(keyContent);
     } else if (keyContent === 'C') {
